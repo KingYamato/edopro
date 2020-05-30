@@ -5,6 +5,7 @@
 #include <Windows.h>
 #else
 #include <sys/file.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #endif // _WIN32
 #include <curl/curl.h>
@@ -92,6 +93,9 @@ void Reboot() {
 #else
 	pid_t pid = fork();
 	if(pid == 0) {
+		struct stat fileStat;
+		stat(ygo::Utils::GetExePath().c_str(), &fileStat);
+		chmod(ygo::Utils::GetExePath().c_str(), fileStat.st_mode | S_IXUSR | S_IXGRP | S_IXOTH);
 		execl(ygo::Utils::GetExePath().c_str(), "show_changelog", nullptr);
 		exit(EXIT_FAILURE);
 	}
@@ -118,19 +122,19 @@ void DeleteOld() {
 
 ygo::ClientUpdater::lock_type GetLock() {
 #ifdef _WIN32
-	HANDLE hFile = CreateFile(EPRO_TEXT("./edopro_lock"),
+	HANDLE hFile = CreateFile(EPRO_TEXT("./.edopro_lock"),
 							  GENERIC_READ,
 							  0,
 							  nullptr,
 							  CREATE_ALWAYS,
-							  0,
+							  FILE_ATTRIBUTE_HIDDEN,
 							  nullptr);
 	if(!hFile || hFile == INVALID_HANDLE_VALUE)
 		return nullptr;
 	DeleteOld();
 	return hFile;
 #else
-	size_t file = open("./edopro_lock", O_CREAT, S_IRWXU);
+	size_t file = open("./.edopro_lock", O_CREAT, S_IRWXU);
 	if(flock(file, LOCK_EX | LOCK_NB)) {
 		if(file)
 			close(file);
@@ -151,7 +155,7 @@ void FreeLock(ygo::ClientUpdater::lock_type lock) {
 	flock(lock, LOCK_UN);
 	close(lock);
 #endif
-	ygo::Utils::FileDelete(EPRO_TEXT("./edopro_lock"));
+	ygo::Utils::FileDelete(EPRO_TEXT("./.edopro_lock"));
 }
 #endif
 namespace ygo {

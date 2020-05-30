@@ -17,7 +17,6 @@
 #include "CGUITTFont/CGUITTFont.h"
 #include "custom_skin_enum.h"
 #ifdef __ANDROID__
-#include <android_native_app_glue.h>
 #include "Android/porting_android.h"
 #endif
 #include <IrrlichtDevice.h>
@@ -1939,6 +1938,7 @@ bool ClientField::OnCommonEvent(const irr::SEvent& event, bool& stopPropagation)
 			}
 			case CHECKBOX_ALTERNATIVE_PHASE_LAYOUT: {
 				gGameConfig->alternative_phase_layout = mainGame->tabSettings.chkAlternativePhaseLayout->isChecked();
+				mainGame->SetPhaseButtons(true);
 				return true;
 			}
 			case CHECKBOX_HIDE_ARCHETYPES: {

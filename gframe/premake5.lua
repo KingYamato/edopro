@@ -3,7 +3,7 @@ local ygopro_config=function(static_core)
 	cppdialect "C++14"
 	rtti "Off"
 	files { "**.cpp", "**.cc", "**.c", "**.h", "**.hpp" }
-	excludes { "lzma/**", "sound_sdlmixer.*", "sound_irrklang.*", "Android/**" }
+	excludes { "lzma/**", "sound_sdlmixer.*", "sound_irrklang.*", "irrklang_dynamic_loader.*", "Android/**" }
 
 	defines "CURL_STATICLIB"
 	if _OPTIONS["pics"] then
@@ -28,13 +28,7 @@ local ygopro_config=function(static_core)
 			defines "YGOPRO_USE_IRRKLANG"
 			includedirs "../irrKlang/include"
 			files "sound_irrklang.*"
-			links "IrrKlang"
-			filter "system:windows"
-				libdirs "../irrKlang/lib/Win32-visualStudio"
-			filter "system:macosx"
-				libdirs "../irrKlang/bin/macosx-gcc/"
-			filter "system:linux"
-				libdirs "../irrKlang/bin/linux-gcc-64/"
+			files "irrklang_dynamic_loader.*"
 		end
 		if _OPTIONS["sound"]=="sdl-mixer" then
 			defines "YGOPRO_USE_SDL_MIXER"

@@ -1,9 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#ifdef __ANDROID__
-#include <android_native_app_glue.h>
-#endif
 #include <unordered_map>
 #include <vector>
 #include <list>
@@ -117,7 +114,6 @@ public:
 	bool MainLoop();
 	path_string NoSkinLabel();
 	bool ApplySkin(const path_string& skin, bool reload = false, bool firstrun = false);
-	void LoadZipArchives();
 	void RefreshDeck(irr::gui::IGUIComboBox* cbDeck);
 	void RefreshLFLists();
 	void RefreshAiDecks();
@@ -127,7 +123,6 @@ public:
 	void DrawSelectionLine(irr::gui::IGUIElement* element, int width, irr::video::SColor color);
 	void DrawBackGround();
 	void DrawLinkedZones(ClientCard* pcard);
-	bool CheckMutual(ClientCard* pcard, int mark);
 	void DrawCards();
 	void DrawCard(ClientCard* pcard);
 	void DrawShadowText(irr::gui::CGUITTFont* font, const irr::core::stringw& text, const irr::core::rect<irr::s32>& shadowposition, const irr::core::rect<irr::s32>& padding, irr::video::SColor color = 0xffffffff, irr::video::SColor shadowcolor = 0xff000000, bool hcenter = false, bool vcenter = false, const irr::core::rect<irr::s32>* clip = nullptr);
@@ -173,7 +168,7 @@ public:
 	void UpdateDuelParam();
 	void UpdateExtraRules(bool set = false);
 	int GetMasterRule(uint32 param, uint32 forbidden = 0, int* truerule = 0);
-	void SetPhaseButtons();
+	void SetPhaseButtons(bool visibility = false);
 	void SetMessageWindow();
 
 	bool HasFocus(irr::gui::EGUI_ELEMENT_TYPE type) const;
@@ -672,16 +667,6 @@ public:
 	irr::gui::IGUIButton* btnJoinHost2;
 	irr::gui::IGUIButton* btnJoinCancel2;
 	irr::gui::IGUIStaticText* fpsCounter;
-
-#ifdef __ANDROID__
-	int glversion;
-	bool isPSEnabled;
-	bool isNPOTSupported;
-	irr::s32 ogles2Solid;
-	irr::s32 ogles2TrasparentAlpha;
-	irr::s32 ogles2BlendTexture;
-	Signal externalSignal;
-#endif
 	std::vector<std::pair<irr::gui::IGUIElement*, int32>> defaultStrings;
 };
 
